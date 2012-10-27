@@ -1,0 +1,14 @@
+#!/bin/bash
+
+logfile=/mnt/share/vm_backup.log
+
+for vmname in $(virsh list --all --name) 
+do
+	echo "$(date) Start snapshuting $vmname">>$logfile
+	virsh snapshot-create $vmname &>>$logfile 
+	if [ "$?" -eq "0" ] ; then
+		echo "$(date) End snapshuting $vmname">>$logfile
+	else
+		echo "$(date) An error occurred created the snapshot $vmname">>$logfile
+	fi
+done
