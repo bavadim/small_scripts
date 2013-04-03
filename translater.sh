@@ -31,11 +31,11 @@ request=`echo $src_txt | sed "s/ /+/g"`
 #if no direct - detect
 if [[ X$direct == "X" ]]
 then
-        lang_index=`curl -s "http://translate.yandex.net/api/v1/tr/detect?text=$request" | grep -sw -c "en"`
+        lang_index=`curl -s "http://translate.yandex.net/api/v1/tr/detect" --data-urlencode "text=$request" | grep -sw -c "en"`
         direct=${lang[$lang_index]}
 fi
 
-raw_xml=`curl -s "http://translate.yandex.net/api/v1/tr/translate?lang=$direct&text=$request" | sed "s/<?xml version=\"1.0\" encoding=\"utf-8\"?>/ /g"`
+raw_xml=`curl -s "http://translate.yandex.net/api/v1/tr/translate?lang=$direct" --data-urlencode "text=$request" | sed "s/<?xml version=\"1.0\" encoding=\"utf-8\"?>/ /g"`
 xslt_xml="<?xml version=\"1.0\" encoding=\"utf-8\"?>
         <?xml-stylesheet type=\"text/xml\" href=\"#stylesheet\"?>
         <!DOCTYPE doc [
