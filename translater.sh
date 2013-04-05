@@ -54,5 +54,7 @@ xslt_xml="<?xml version=\"1.0\" encoding=\"utf-8\"?>
                 $raw_xml
 
         </doc>"
-echo $xslt_xml | xsltproc - 2>&1
+#TODO
+echo $xslt_xml | xsltproc - | sed 's/+/ /g' 2>&1
 echo
+
