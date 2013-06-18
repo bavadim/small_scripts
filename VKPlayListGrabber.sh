@@ -2,7 +2,7 @@
 
 save_folder=$1; shift;
 
-token=652c741c470d8f6cef68a5ee46d0064999ddec674eadcced686f618322942e4cef8d334e5cff20d7a3d0c
+token=
 
 getMusicList() {
   local token="$1"; shift;
