@@ -2,13 +2,11 @@
 
 save_folder=$1; shift;
 
-uid=
-token=
+token=652c741c470d8f6cef68a5ee46d0064999ddec674eadcced686f618322942e4cef8d334e5cff20d7a3d0c
 
 getMusicList() {
-  local userid=$1; shift;
-  local token=$1; shift;
-  local xml=`curl -s "https://api.vk.com/method/audio.get.xml?uid=$userid&access_token=$token" | sed "s/<?xml version=\"1.0\" encoding=\"utf-8\"?>/ /g"`
+  local token="$1"; shift;
+  local xml=`curl -s "https://api.vk.com/method/audio.get.xml?access_token=$token" | sed "s/<?xml version=\"1.0\" encoding=\"utf-8\"?>/ /g"` 2>&1
   local xslt_xml="<?xml version=\"1.0\" encoding=\"utf-8\"?>
         <?xml-stylesheet type=\"text/xml\" href=\"#stylesheet\"?>
         <!DOCTYPE doc [
@@ -34,7 +32,6 @@ getMusicList() {
 }
 
 grab() {
-  local uid=$1; shift;
   local access_token=$1; shift;
 
   local save_folder=$1; shift;
@@ -43,7 +40,6 @@ grab() {
     save_folder="./"  
   fi
   if [ ! -d "$save_folder" ]; then
-    echo $save_folder
     mkdir -p $save_folder
   fi  
   pushd . > /dev/null
@@ -53,10 +49,17 @@ grab() {
     name=${line%%,*}.mp3
     url=${line##*,}
     
-    curl -s "$url" -o "$name"
+    echo "Загрузка ${name}..."
+    curl -s "$url" -o "$name" 2>&1
+    sleep 0.4s
+
+    if [[ $(du -s "${name}" | cut -f1) -le 1024  ]];
+    then
+      echo "Файл "${name}" возможно не скачался"
+    fi
   done
   popd > /dev/null
 }
 
-grab $uid $token "$save_folder"
+grab "$token" "$save_folder"
 
